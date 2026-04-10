@@ -62,7 +62,7 @@ jobs:
         run: pnpm install --no-frozen-lockfile
 
       - name: Install Vercel CLI
-        run: pnpm add -g vercel
+        run: npm install -g vercel
 
       - name: Download build artifacts
         uses: actions/download-artifact@v4
