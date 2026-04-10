@@ -42,39 +42,29 @@ jobs:
 
       - name: Build Next.js
         run: |
+          echo "=== Starting build ==="
           cd apps/web
           pnpm build
+          echo "=== Build completed ==="
 
       - name: Debug build output
         run: |
-          echo "=== apps/web directory ==="
+          echo "=== Checking apps/web ==="
           ls -la apps/web/
           echo ""
-          echo "=== Checking for out folder ==="
-          if [ -d "apps/web/out" ]; then
-            echo "OUT FOLDER EXISTS!"
-            ls -la apps/web/out/
-          else
-            echo "OUT FOLDER DOES NOT EXIST"
-          fi
-          echo ""
-          echo "=== Checking for .next folder ==="
-          if [ -d "apps/web/.next" ]; then
-            echo ".NEXT FOLDER EXISTS"
-            ls apps/web/.next/ | head -10
-          else
-            echo ".NEXT FOLDER DOES NOT EXIST"
-          fi
+          echo "=== Out folder check ==="
+          ls -la apps/web/out/ 2>/dev/null || echo "OUT NOT FOUND"
 
       - name: Upload artifact
-        if: success()
+        run: |
+          echo "=== Uploading artifact ==="
+          ls -la apps/web/out/ 2>/dev/null || echo "Cannot upload - out not found"
+
+      - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: nextjs-static
           path: apps/web/out
 
       - name: Deploy to GitHub Pages
-        if: success()
         uses: actions/deploy-pages@v4
-        with:
-          artifact_name: nextjs-static
