@@ -5,6 +5,15 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   build-and-deploy:
     name: Build and Deploy
@@ -35,15 +44,6 @@ jobs:
         run: |
           cd apps/web
           pnpm next build
-
-      - name: Check what was built
-        run: |
-          echo "=== apps/web contents ==="
-          ls -la apps/web/
-          echo "=== out folder check ==="
-          ls -la apps/web/out 2>/dev/null || echo "NO OUT FOLDER"
-          echo "=== .next contents ==="
-          ls -la apps/web/.next 2>/dev/null | head -20
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
