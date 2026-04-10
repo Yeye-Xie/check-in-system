@@ -27,29 +27,31 @@ jobs:
         run: npm install -g pnpm
 
       - name: Install dependencies
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Build Next.js app
-        run: cd apps/web && pnpm build
-
-      - name: Check output
         run: |
-          echo "=== Checking out folder ==="
-          ls -la apps/web/out 2>/dev/null || echo "out folder not found"
-          echo "=== Checking .next folder ==="
-          ls -la apps/web/.next 2>/dev/null | head -10
-          echo "=== Build output ==="
-          ls apps/web/out 2>/dev/null || ls apps/web 2>/dev/null
+          cd apps/web
+          pnpm install --no-frozen-lockfile
+
+      - name: Build Next.js
+        run: |
+          cd apps/web
+          pnpm next build
+
+      - name: Check what was built
+        run: |
+          echo "=== apps/web contents ==="
+          ls -la apps/web/
+          echo "=== out folder check ==="
+          ls -la apps/web/out 2>/dev/null || echo "NO OUT FOLDER"
+          echo "=== .next contents ==="
+          ls -la apps/web/.next 2>/dev/null | head -20
 
       - name: Upload artifact
-        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: nextjs-static
           path: apps/web/out
 
       - name: Deploy to GitHub Pages
-        if: success()
         uses: actions/deploy-pages@v4
         with:
           artifact_name: nextjs-static
