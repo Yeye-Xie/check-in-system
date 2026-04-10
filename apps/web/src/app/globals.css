@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #FAF5EF;
+  --card: #FFF8F0;
+  --primary: #C4A77D;
+  --primary-dark: #8B7355;
+  --text-primary: #4A4039;
+  --text-secondary: #7D7062;
+  --success: #6B8E6B;
+  --error: #C67B6B;
+  --border: #E8E0D5;
+  --unchecked: #F5C842;
+  --unchecked-dark: #E8B830;
+  --checked: #4A90D9;
+  --checked-dark: #3B7DD8;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background-color: var(--background);
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+@layer utilities {
+  .animate-in {
+    animation: fade-in 0.3s ease-out, slide-up 0.3s ease-out;
+  }
+
+  .shake {
+    animation: shake 0.3s ease-in-out;
+  }
+}
