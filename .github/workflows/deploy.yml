@@ -32,11 +32,24 @@ jobs:
       - name: Build Next.js app
         run: cd apps/web && pnpm build
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Check output
+        run: |
+          echo "=== Checking out folder ==="
+          ls -la apps/web/out 2>/dev/null || echo "out folder not found"
+          echo "=== Checking .next folder ==="
+          ls -la apps/web/.next 2>/dev/null | head -10
+          echo "=== Build output ==="
+          ls apps/web/out 2>/dev/null || ls apps/web 2>/dev/null
+
+      - name: Upload artifact
+        if: success()
+        uses: actions/upload-artifact@v4
         with:
+          name: nextjs-static
           path: apps/web/out
 
       - name: Deploy to GitHub Pages
-        id: deployment
+        if: success()
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: nextjs-static
