@@ -32,23 +32,15 @@ jobs:
         run: npm install -g pnpm
 
       - name: Install dependencies
-        run: |
-          cd apps/web
-          pnpm install --no-frozen-lockfile
+        run: cd apps/web && pnpm install --no-frozen-lockfile
 
       - name: Build
-        run: |
-          cd apps/web
-          pnpm build
-        continue-on-error: true
+        run: cd apps/web && pnpm build
 
-      - name: Check output
-        run: |
-          echo "=== Build status: $? ==="
-          ls -la apps/web/ | grep -E "out|\.next"
+      - name: Verify out folder
+        run: ls -la apps/web/out/
 
-      - name: Upload Pages artifact
-        if: always()
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: apps/web/out
@@ -57,7 +49,6 @@ jobs:
     name: Deploy
     needs: build
     runs-on: ubuntu-latest
-    if: always() && needs.build.result == 'success'
 
     steps:
       - name: Deploy to GitHub Pages
