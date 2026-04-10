@@ -45,13 +45,36 @@ jobs:
           cd apps/web
           pnpm build
 
+      - name: Debug build output
+        run: |
+          echo "=== apps/web directory ==="
+          ls -la apps/web/
+          echo ""
+          echo "=== Checking for out folder ==="
+          if [ -d "apps/web/out" ]; then
+            echo "OUT FOLDER EXISTS!"
+            ls -la apps/web/out/
+          else
+            echo "OUT FOLDER DOES NOT EXIST"
+          fi
+          echo ""
+          echo "=== Checking for .next folder ==="
+          if [ -d "apps/web/.next" ]; then
+            echo ".NEXT FOLDER EXISTS"
+            ls apps/web/.next/ | head -10
+          else
+            echo ".NEXT FOLDER DOES NOT EXIST"
+          fi
+
       - name: Upload artifact
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: nextjs-static
           path: apps/web/out
 
       - name: Deploy to GitHub Pages
+        if: success()
         uses: actions/deploy-pages@v4
         with:
           artifact_name: nextjs-static
