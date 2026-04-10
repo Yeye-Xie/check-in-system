@@ -62,7 +62,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 pnpm dev
 ```
 
-访问 http://localhost:3000
+访问 https://check-in-system-web.vercel.app/login
 
 ## 功能
 
