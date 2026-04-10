@@ -29,8 +29,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Build project
-        run: pnpm build
+      - name: Build Next.js app
+        run: cd apps/web && pnpm build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
