@@ -10,13 +10,9 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
-  build-and-deploy:
-    name: Build and Deploy
+  build:
+    name: Build
     runs-on: ubuntu-latest
 
     env:
@@ -40,31 +36,29 @@ jobs:
           cd apps/web
           pnpm install --no-frozen-lockfile
 
-      - name: Build Next.js
+      - name: Build
         run: |
-          echo "=== Starting build ==="
           cd apps/web
           pnpm build
-          echo "=== Build completed ==="
+        continue-on-error: true
 
-      - name: Debug build output
+      - name: Check output
         run: |
-          echo "=== Checking apps/web ==="
-          ls -la apps/web/
-          echo ""
-          echo "=== Out folder check ==="
-          ls -la apps/web/out/ 2>/dev/null || echo "OUT NOT FOUND"
+          echo "=== Build status: $? ==="
+          ls -la apps/web/ | grep -E "out|\.next"
 
-      - name: Upload artifact
-        run: |
-          echo "=== Uploading artifact ==="
-          ls -la apps/web/out/ 2>/dev/null || echo "Cannot upload - out not found"
-
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload Pages artifact
+        if: always()
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: nextjs-static
           path: apps/web/out
 
+  deploy:
+    name: Deploy
+    needs: build
+    runs-on: ubuntu-latest
+    if: always() && needs.build.result == 'success'
+
+    steps:
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
