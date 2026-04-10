@@ -67,7 +67,7 @@ export default function LoginPage() {
         <CardHeader className="space-y-1">
           <CardTitle className="text-2xl font-semibold text-center">欢迎回来</CardTitle>
           <CardDescription className="text-center">
-            输入手机号和密码登录
+            输入手机号（账号）和密码登录
           </CardDescription>
         </CardHeader>
         <CardContent>
